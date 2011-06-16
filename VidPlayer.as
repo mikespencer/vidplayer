@@ -41,6 +41,7 @@
 			source : null,
 			autoplay : true,
 			mute : true,
+			buttonsFill : 0xFFFFFF,
 			progressFill :  [ 0x6699CC, 0x306496 ],
 			progressBGFill:  [ 0xDDDDDD, 0x666666 ],
 			poster : false,
@@ -180,7 +181,7 @@
 		
 		private function play_pause_bg(radius:Number = 24):Sprite{
 			var circle:Sprite = new Sprite();
-			circle.graphics.lineStyle(3,0xFFFFFF);
+			circle.graphics.lineStyle(3,data.buttonsFill);
 			circle.graphics.beginFill(0x000000);
 			circle.graphics.drawCircle(radius,radius,radius);
 			circle.graphics.endFill();
@@ -210,7 +211,7 @@
 			var triangle:Sprite = new Sprite();
 			var startX = radius/1.45;
 			var startY= radius-triangleHeight/2;
-			triangle.graphics.beginFill(0xFFFFFF);
+			triangle.graphics.beginFill(data.buttonsFill);
 			triangle.graphics.moveTo(startX, startY);
 			triangle.graphics.lineTo(startX, startY);
 			triangle.graphics.lineTo(startX + triangleHeight/1.2,startY + triangleHeight/2);
@@ -249,11 +250,11 @@
 			var line1:Sprite = new Sprite();
 			var line2:Sprite = new Sprite();
 			line1.graphics.lineStyle();
-			line1.graphics.beginFill(0xFFFFFF);
+			line1.graphics.beginFill(data.buttonsFill);
 			line1.graphics.drawRect(radius-8,radius/2, 3,radius);
 			line1.graphics.endFill();
 			line2.graphics.lineStyle();
-			line2.graphics.beginFill(0xFFFFFF);
+			line2.graphics.beginFill(data.buttonsFill);
 			line2.graphics.drawRect(radius+5,radius/2, 3,radius);
 			line2.graphics.endFill();
 			
@@ -332,31 +333,17 @@
 		}
 		
 		private function create_vertLine(){
-			var line:Sprite = new Sprite();
-			controls_mc.addChild(line);
-			line.x = data.width-23;
-			line.y = 0;
-			line.graphics.lineStyle();
-			line.graphics.beginFill(0xFFFFFF,1);
-			line.graphics.drawRect(0,1,1,22);
-			line.graphics.endFill();
+			controls_mc.addChild(drawLine( data.width-23, 1, 1, 22, 0xFFFFFF ) );
 		}
 		
 		private function create_horizontalLine(){
-			var line:Sprite = new Sprite();
-			controls_mc.addChild(line);
-			line.x = 0;
-			line.y = 0;
-			line.graphics.lineStyle();
-			line.graphics.beginFill(0xFFFFFF,1);
-			line.graphics.drawRect(0,0,data.width,1);
-			line.graphics.endFill();
+			controls_mc.addChild( drawLine( 0, 0, data.width, 1, 0xFFFFFF ) );
 		}
 		
-		private function drawLine(x:Number, y:Number, w:Number, h:Number, colour:Number = 0xFFFFFF):Sprite {
+		private function drawLine(x:Number, y:Number, w:Number, h:Number, colour = false):Sprite {
 			var line:Sprite = new Sprite();
 			line.graphics.lineStyle();
-			line.graphics.beginFill(colour);
+			line.graphics.beginFill( colour is Number ? colour : data.buttonsFill );
 			line.graphics.drawRect(x,y,w,h);
 			line.graphics.endFill();
 			return line;
@@ -364,7 +351,7 @@
 		private function volumeBG(alpha:Number=1):Sprite{
 			var bg:Sprite = new Sprite();
 			bg.graphics.lineStyle();
-			bg.graphics.beginFill(0x333333,alpha);
+			bg.graphics.beginFill(0x000000,alpha);
 			bg.graphics.drawRect(0,0,22,22);
 			bg.graphics.endFill();
 			return bg;
