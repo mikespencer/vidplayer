@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title>demo</title>
+		<script type="text/javascript">
+			var wpAd = typeof wpAd === 'undefined' ? {} : wpAd;
+			wpAd.videoplayer = {
+				pixels : {
+					play : 'play src',
+					pause : 'pause src',
+					end : 'end src'
+				},
+				addPixel : function(arg){ 		
+					//arg will either be "play", "pause" or "end" from flash
+					//"play" is when somebody clicks play
+					//"pause" is when somebody clicks pause
+					//"end" is when the video reaches the end
+					var pix = document.createElement('img');
+					pix.src = wpAd.videoplayer.pixels[arg];
+					pix.height = "1";
+					pix.width = "1";
+					pix.border = "0";
+					pix.alt = '';
+					pix.style.display = 'none';
+					document.body.appendChild(pix);
+				}
+			}
+		</script>
+	</head>
+	<body>
+	
+		<object type="application/x-shockwave-flash" data="standAloneDemo.swf" width="700" height="400" id="thisIsHereBecauseInternetExplorerNeedsIt" style="outline:none;">
+			<param name="movie" value="standAloneDemo.swf" />
+			<param name="quality" value="high" />
+			<param name="bgcolor" value="#000000" />
+			<param name="play" value="true" />
+			<param name="loop" value="true" />
+			<param name="wmode" value="window" />
+			<param name="scale" value="noscale " />
+			<param name="menu" value="true" />
+			<param name="devicefont" value="false" />
+			<param name="salign" value="" />
+			<param name="allowScriptAccess" value="always" />
+			<param name="flashVars" value="source=http://media.washingtonpost.com/media/2011/05/31/05312011-50v.m4v&autoplay=false&poster=http://media.washingtonpost.com/wp-adv/test/mstest/poster.jpg&track_pause=true&track_play=true&track_end=true" />
+			<!--param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&mute=false&autoplay=false" /-->
+		</object>
+		
+	</body>
+</html>
