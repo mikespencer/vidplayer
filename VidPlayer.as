@@ -41,6 +41,8 @@
 			source : null,
 			autoplay : true,
 			mute : true,
+			controlsBorderFill : 0xFFFFFF,
+			buttonsBGFill : 0x000000,
 			buttonsFill : 0xFFFFFF,
 			progressFill :  [ 0x6699CC, 0x306496 ],
 			progressBGFill:  [ 0xDDDDDD, 0x666666 ],
@@ -182,7 +184,7 @@
 		private function play_pause_bg(radius:Number = 24):Sprite{
 			var circle:Sprite = new Sprite();
 			circle.graphics.lineStyle(3,data.buttonsFill);
-			circle.graphics.beginFill(0x000000);
+			circle.graphics.beginFill(data.buttonsBGFill);
 			circle.graphics.drawCircle(radius,radius,radius);
 			circle.graphics.endFill();
 			return circle;
@@ -333,11 +335,11 @@
 		}
 		
 		private function create_vertLine(){
-			controls_mc.addChild(drawLine( data.width-23, 1, 1, 22, 0xFFFFFF ) );
+			controls_mc.addChild(drawLine( data.width-23, 1, 1, 22, data.controlsBorderFill ) );
 		}
 		
 		private function create_horizontalLine(){
-			controls_mc.addChild( drawLine( 0, 0, data.width, 1, 0xFFFFFF ) );
+			controls_mc.addChild( drawLine( 0, 0, data.width, 1, data.controlsBorderFill ) );
 		}
 		
 		private function drawLine(x:Number, y:Number, w:Number, h:Number, colour = false):Sprite {
@@ -351,7 +353,7 @@
 		private function volumeBG(alpha:Number=1):Sprite{
 			var bg:Sprite = new Sprite();
 			bg.graphics.lineStyle();
-			bg.graphics.beginFill(0x000000,alpha);
+			bg.graphics.beginFill(data.buttonsBGFill ,alpha);
 			bg.graphics.drawRect(0,0,22,22);
 			bg.graphics.endFill();
 			return bg;
