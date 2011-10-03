@@ -56,7 +56,8 @@
 			standAlone : false,
 			track_play : false,
 			track_pause : false,
-			track_end : false
+			track_end : false,
+			preload : true
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -134,11 +135,13 @@
 		}
 		
 		private function exec(){
-			nsStream.play(data.source);
+			if((data.preload == true || data.preload != 'false') && !data.preloadLoaded){
+				nsStream.play(data.source);
+				nsStream.pause();
+				nsStream.seek(0);
+			}
 			lastVolume = data.mute && data.mute != 'false' ? 0 : 1;
 			setVolume(lastVolume)
-			nsStream.pause();
-			nsStream.seek(0);
 			this.x = data.x;
 			this.y = data.y;
 			if(data.autoplay && data.autoplay != 'false'){
@@ -595,6 +598,12 @@
 			setVolume(1);
 		}
 		public function playClicked(e:Event = null){
+			if((data.preload == false || data.preload == 'false') && !data.preloadLoaded){
+				nsStream.play(data.source);
+				nsStream.pause();
+				nsStream.seek(0);
+				data.preloadLoaded=true;
+			}
 			if(isStopped){
 				isStopped = false;
 				vidDisplay.visible= true;
@@ -686,6 +695,14 @@
 					ExternalInterface.call(func, event);
 				}
 			}
+		}
+		public function switchVideo(video){
+			stopVideoPlayer();
+			data.source = video;
+			data.autoplay = true;
+			data.mute = lastVolume ? false : true;
+			data.preloadLoaded = false;
+			exec();
 		}
 	}
 }
