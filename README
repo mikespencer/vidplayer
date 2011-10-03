@@ -37,6 +37,7 @@ Available options passed in as an object (and their default settings) - eg:
 	track_play : false,													// track play clicks
 	track_pause : false,												// track pause clicks
 	track_end : false														// track when the video reaches the end
+    preload : true                                                            // load the video when fla loads (true), or start to load the video when the user clicks play (false)
 }
 
 
