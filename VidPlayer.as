@@ -703,6 +703,7 @@
 			data.mute = lastVolume ? false : true;
 			data.preloadLoaded = false;
 			exec();
+			hide_controls();
 		}
 	}
 }
