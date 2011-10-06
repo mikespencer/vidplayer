@@ -135,7 +135,7 @@
 		}
 		
 		private function exec(){
-			if((data.preload == true || data.preload != 'false') && !data.preloadLoaded){
+			if((data.preload == true || data.preload == 'true') && !data.preloadLoaded){
 				nsStream.play(data.source);
 				nsStream.pause();
 				nsStream.seek(0);
