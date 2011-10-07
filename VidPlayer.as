@@ -135,7 +135,7 @@
 		}
 		
 		private function exec(){
-			if((data.preload == true || data.preload == 'true') && !data.preloadLoaded){
+			if( !!data.preload && data.preload !== 'false' && !data.preloadLoaded ){
 				nsStream.play(data.source);
 				nsStream.pause();
 				nsStream.seek(0);
@@ -598,7 +598,7 @@
 			setVolume(1);
 		}
 		public function playClicked(e:Event = null){
-			if((data.preload == false || data.preload == 'false') && !data.preloadLoaded){
+			if((!data.preload || data.preload === 'false') && !data.preloadLoaded){
 				nsStream.play(data.source);
 				nsStream.pause();
 				nsStream.seek(0);
