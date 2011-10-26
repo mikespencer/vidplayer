@@ -60,7 +60,7 @@
 			track_pause : false,
 			track_end : false,
 			preload : true,
-			pauseAfter30 : false
+			pauseAt : false
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -86,7 +86,7 @@
 		private var ncConnection:NetConnection;
 		private var nsStream:NetStream;
 		private var meta:Object;
-		private var pauseAfter30:uint;
+		private var pauseAt:uint;
 		
 		//constructor
 		public function VidPlayer(obj:Object = null) {
@@ -150,8 +150,9 @@
 			this.y = data.y;
 			if(data.autoplay && data.autoplay != 'false'){
 				playClicked();
-				if(!!data.pauseAfter30 && data.pauseAfter30 != 'false' && !interacted){
-					pauseAfter30 = setTimeout(pauseClicked ,30000)
+				if(!!data.pauseAt && data.pauseAt != 'false' && !interacted){
+					var t = parseInt(data.pauseAt) is Number ? parseInt(data.pauseAt) * 1000 : 30000
+					pauseAt = setTimeout(pauseClicked, t);
 				}
 			}
 			hide_btnPause();
@@ -516,8 +517,8 @@
 			nsStream.pause();
 			nsStream.seek(0);
 			
-			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
-				clearPauseAfter30();
+			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
+				clearpauseAt();
 			}
 			
 			mcProgressFill.width=1;
@@ -604,14 +605,14 @@
 		}
 		public function mute(e:Event = null){
 			setVolume(0);
-			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
-				clearPauseAfter30();
+			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
+				clearpauseAt();
 			}
 		}
 		public function unMute(e:Event = null){
 			setVolume(1);
-			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
-				clearPauseAfter30();
+			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
+				clearpauseAt();
 			}
 		}
 		public function playClicked(e:Event = null){
@@ -653,15 +654,15 @@
 			if(data.track_pause && data.track_pause != 'false' && e!=null){
 				addTracking('pause',data.track_pause);
 			}
-			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
-				clearPauseAfter30();
+			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
+				clearpauseAt();
 			}
 			show_controls();
 			show_btnPlay();
 			hide_btnPause();
 		}
-		public function clearPauseAfter30(){
-			clearTimeout(pauseAfter30);
+		public function clearpauseAt(){
+			clearTimeout(pauseAt);
 			interacted = true;
 		}
 		public function show_controls(e:Event = null){
@@ -695,8 +696,8 @@
 			stage.addEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.addEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
 			if(!isBuffering)wrapper.removeEventListener(MouseEvent.MOUSE_OUT, hide_controls);		
-			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
-				clearPauseAfter30();
+			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
+				clearpauseAt();
 			}
 			tmrDisplay.addEventListener(TimerEvent.TIMER, mov_seek);
 		}
@@ -728,7 +729,7 @@
 			data.autoplay = true;
 			data.mute = lastVolume ? false : true;
 			data.preloadLoaded = false;
-			data.pauseAfter30 = false;
+			data.pauseAt = false;
 			exec();
 			hide_controls();
 		}
