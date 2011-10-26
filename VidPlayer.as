@@ -28,6 +28,8 @@
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.setTimeout;
+	import flash.utils.clearTimeout;
 	
 	
 	public class VidPlayer extends MovieClip{
@@ -57,7 +59,8 @@
 			track_play : false,
 			track_pause : false,
 			track_end : false,
-			preload : true
+			preload : true,
+			pauseAfter30 : false
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -76,13 +79,14 @@
 		private var trackBG:Sprite = new Sprite();
 		private var mcProgressBG:MovieClip = new MovieClip();		
 		private var mcProgressFill:MovieClip = new MovieClip();
-		private var message_mc:MovieClip = new MovieClip();
+		private var message_mc:MovieClip = new MovieClip();		
+		private var interacted:Boolean = false;
 		private var tmrDisplay:Timer;	
 		private var vidDisplay:Video;
 		private var ncConnection:NetConnection;
 		private var nsStream:NetStream;
 		private var meta:Object;
-
+		private var pauseAfter30:uint;
 		
 		//constructor
 		public function VidPlayer(obj:Object = null) {
@@ -135,7 +139,7 @@
 		}
 		
 		private function exec(){
-			if((data.preload == true || data.preload != 'false') && !data.preloadLoaded){
+			if( !!data.preload && data.preload !== 'false' && !data.preloadLoaded ){
 				nsStream.play(data.source);
 				nsStream.pause();
 				nsStream.seek(0);
@@ -146,6 +150,9 @@
 			this.y = data.y;
 			if(data.autoplay && data.autoplay != 'false'){
 				playClicked();
+				if(!!data.pauseAfter30 && data.pauseAfter30 != 'false' && !interacted){
+					pauseAfter30 = setTimeout(pauseClicked ,30000)
+				}
 			}
 			hide_btnPause();
 		}
@@ -509,6 +516,10 @@
 			nsStream.pause();
 			nsStream.seek(0);
 			
+			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
+				clearPauseAfter30();
+			}
+			
 			mcProgressFill.width=1;
 						
 			mcProgressBG.removeEventListener(MouseEvent.MOUSE_DOWN, start_mov_seek);
@@ -593,12 +604,18 @@
 		}
 		public function mute(e:Event = null){
 			setVolume(0);
+			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
+				clearPauseAfter30();
+			}
 		}
 		public function unMute(e:Event = null){
 			setVolume(1);
+			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
+				clearPauseAfter30();
+			}
 		}
 		public function playClicked(e:Event = null){
-			if((data.preload == false || data.preload == 'false') && !data.preloadLoaded){
+			if((!data.preload || data.preload === 'false') && !data.preloadLoaded){
 				nsStream.play(data.source);
 				nsStream.pause();
 				nsStream.seek(0);
@@ -636,9 +653,16 @@
 			if(data.track_pause && data.track_pause != 'false' && e!=null){
 				addTracking('pause',data.track_pause);
 			}
+			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
+				clearPauseAfter30();
+			}
 			show_controls();
 			show_btnPlay();
 			hide_btnPause();
+		}
+		public function clearPauseAfter30(){
+			clearTimeout(pauseAfter30);
+			interacted = true;
 		}
 		public function show_controls(e:Event = null){
 			TweenLite.to(controls_mc, 0.3, {x:0, y:data.height - controls_mc.height});
@@ -671,7 +695,9 @@
 			stage.addEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.addEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
 			if(!isBuffering)wrapper.removeEventListener(MouseEvent.MOUSE_OUT, hide_controls);		
-			
+			if(!interacted && !!data.pauseAfter30 && data.pauseAfter30 != 'false'){
+				clearPauseAfter30();
+			}
 			tmrDisplay.addEventListener(TimerEvent.TIMER, mov_seek);
 		}
 		private function stop_mov_seek(e:MouseEvent):void{
@@ -702,7 +728,9 @@
 			data.autoplay = true;
 			data.mute = lastVolume ? false : true;
 			data.preloadLoaded = false;
+			data.pauseAfter30 = false;
 			exec();
+			hide_controls();
 		}
 	}
 }
