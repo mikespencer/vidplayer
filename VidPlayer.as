@@ -30,6 +30,7 @@
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.setTimeout;
 	import flash.utils.clearTimeout;
+	import flash.net.navigateToURL;
 	
 	
 	public class VidPlayer extends MovieClip{
@@ -60,7 +61,8 @@
 			track_pause : false,
 			track_end : false,
 			preload : true,
-			pauseAt : false
+			pauseAt : false,
+			clickTag : false
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -239,7 +241,12 @@
 			play_symbol.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e){									   
 				center(play_symbol,23/2);
 			})*/
-			btnPlay.addEventListener(MouseEvent.CLICK, playClicked);
+			if(data.clickTag && data.clickTag != 'false'){
+				play_symbol.addEventListener(MouseEvent.CLICK, playClicked);
+				bigPlay.addEventListener(MouseEvent.CLICK, function(e){changePage(data.clickTag)});
+			} else{
+				btnPlay.addEventListener(MouseEvent.CLICK, playClicked);
+			}
 		}
 				
 		private function create_btnPause(radius:Number = 24){
@@ -281,7 +288,12 @@
 			})
 			pause_symbol.load(new URLRequest(data.pause_button_source));
 			btnPause.addChild(pause_symbol);*/
-			btnPause.addEventListener(MouseEvent.CLICK, pauseClicked);
+			if(data.clickTag && data.clickTag != 'false'){
+				pause_symbol.addEventListener(MouseEvent.CLICK, pauseClicked);
+				bigPause.addEventListener(MouseEvent.CLICK, function(e){changePage(data.clickTag);pauseClicked(e)});
+			} else{
+				btnPause.addEventListener(MouseEvent.CLICK, pauseClicked);
+			}
 		}
 		
 		private function create_controls_mc(){
@@ -732,6 +744,19 @@
 			data.pauseAt = false;
 			exec();
 			hide_controls();
+		}
+		private function changePage(url:*, window:String = "_blank"):void {
+			var req:URLRequest = url is String ? new URLRequest(url) : url;
+			if (!ExternalInterface.available) {
+				navigateToURL(req, window);
+			} else {
+				var strUserAgent:String = String(ExternalInterface.call("function() {return navigator.userAgent;}")).toLowerCase();
+				if (strUserAgent.indexOf("firefox") != -1 || (strUserAgent.indexOf("msie") != -1 && uint(strUserAgent.substr(strUserAgent.indexOf("msie") + 5, 3)) >= 6)) {
+					ExternalInterface.call("window.open", req.url, window);
+				} else {
+					navigateToURL(req, window);
+				}
+			}
 		}
 	}
 }
