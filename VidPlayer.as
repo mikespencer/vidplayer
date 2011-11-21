@@ -9,7 +9,6 @@
 	import flash.display.Graphics;
 	import flash.display.GradientType;
 	import flash.display.SpreadMethod;
-	import flash.display.Graphics;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.events.NetStatusEvent;
@@ -62,7 +61,9 @@
 			track_end : false,
 			preload : true,
 			pauseAt : false,
-			clickTag : false
+			clickTag : false,
+			jsTrackFunction : false,
+			trackingPixel : false
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -71,7 +72,7 @@
 		private var controls_mc:MovieClip = new MovieClip();
 		private var btnMute:MovieClip = new MovieClip();
 		private var btnUnmute:MovieClip = new MovieClip();
-		private var posterImage:Loader = new Loader();
+		private var posterImage:Loader;
 		private var bigPlay:Sprite = new Sprite();
 		private var bigPause:Sprite = new Sprite();
 		private var poster:MovieClip = new MovieClip();		
@@ -93,7 +94,7 @@
 		//constructor
 		public function VidPlayer(obj:Object = null) {
 			for(var key in obj){
-				if(typeof data[key] != 'undefined'){
+				if(typeof data[key] != 'undefined' && obj.hasOwnProperty(key) && data.hasOwnProperty(key)){
 					 //overwrite defaults
 					data[key] = obj[key];
 				}
@@ -107,7 +108,7 @@
 			if(data.useFlashVars && paramObj){
 				for (var param in paramObj){
 					 //overwrite defaults with flashVars
-					if(typeof data[param] != 'undefined'){
+					if(typeof data[param] != 'undefined' && data.hasOwnProperty(param) && paramObj.hasOwnProperty(param)){
 						data[param] = paramObj[param];
 					}
 				}
@@ -146,6 +147,8 @@
 				nsStream.pause();
 				nsStream.seek(0);
 			}
+import flash.display.Loader;
+
 			lastVolume = data.mute && data.mute != 'false' ? 0 : 1;
 			setVolume(lastVolume)
 			this.x = data.x;
@@ -489,10 +492,6 @@
 		}
 		
 		private function create_poster(){
-			posterImage.load(new URLRequest(data.poster));
-			posterImage.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e){				
-				center(posterImage);
-			})
 			var bg:Sprite = new Sprite();
 			bg.x = 0;
 			bg.y = 0;
@@ -501,8 +500,20 @@
 			bg.graphics.drawRect(0,0,data.width,data.height);
 			bg.graphics.endFill();
 			poster.addChild(bg);
-			poster.addChild(posterImage);
 			wrapper.addChild(poster);
+			update_poster(false);
+		}
+		
+		private function update_poster(remove_old_poster = true){
+			if(remove_old_poster){
+				poster.removeChild(posterImage)
+			}
+			posterImage = new Loader();
+			posterImage.load(new URLRequest(data.poster));
+			posterImage.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e){				
+				center(posterImage);
+			});
+			poster.addChild(posterImage);
 		}
 		
 		private function create_timer(){
@@ -616,18 +627,21 @@
 			hide_btnPause();
 		}
 		public function mute(e:Event = null){
+			addPixel(e);
 			setVolume(0);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
 				clearpauseAt();
 			}
 		}
 		public function unMute(e:Event = null){
+			addPixel(e);
 			setVolume(1);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
 				clearpauseAt();
 			}
 		}
 		public function playClicked(e:Event = null){
+			addPixel(e);
 			if((!data.preload || data.preload === 'false') && !data.preloadLoaded){
 				nsStream.play(data.source);
 				nsStream.pause();
@@ -657,6 +671,7 @@
 			wrapper.addEventListener(MouseEvent.MOUSE_OUT,hide_btnPause);
 		}		
 		public function pauseClicked(e:Event = null){
+			addPixel(e);
 			nsStream.pause();
 			wrapper.removeEventListener(MouseEvent.MOUSE_OVER, show_controls);
 			wrapper.removeEventListener(MouseEvent.MOUSE_OUT, hide_controls);		
@@ -714,6 +729,7 @@
 			tmrDisplay.addEventListener(TimerEvent.TIMER, mov_seek);
 		}
 		private function stop_mov_seek(e:MouseEvent):void{
+			addPixel(e);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.removeEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
 			if(!isBuffering)wrapper.addEventListener(MouseEvent.MOUSE_OUT, hide_controls);
@@ -735,7 +751,7 @@
 				}
 			}
 		}
-		public function switchVideo(video){
+		private function oldSwitchVideo(video){
 			stopVideoPlayer();
 			data.source = video;
 			data.autoplay = true;
@@ -745,6 +761,57 @@
 			exec();
 			hide_controls();
 		}
+		public function switchVideo(video = false){
+			if(video){
+				oldSwitchVideo(video);
+				return true;
+			}
+			stopVideoPlayer();
+			data.mute = lastVolume ? false : true;
+			data.preloadLoaded = false;
+			exec();
+			hide_controls();
+		}
+		
+		private function updateData(arg){
+			for(var key in arg){
+				if(arg.hasOwnProperty(key) && data.hasOwnProperty(key)){
+					data[key] = arg[key];
+				}
+			}
+			data.autoplay = arg.hasOwnProperty('autoplay') ? Boolean(arg.autoplay) : true;
+			data.pauseAt = arg.hasOwnProperty('pauseAt') ? arg.pauseAt : false;
+			data.buffer_time = arg.hasOwnProperty('buffer_time') ? Number(arg.buffer_time) : 8;
+			if(arg.hasOwnProperty('poster')){
+				update_poster(true);
+			}
+			if(arg.hasOwnProperty('source')){
+				switchVideo();
+			}
+		}
+		public function attr(arg = null){
+			if(arg is String){
+				return data[arg];
+			} else if(arg is Object){
+				updateData(arg);
+				return true;
+			}
+			return data;
+		}
+		public function addPixel(e){
+			if(e && data.jsTrackFunction && data.trackingPixel){
+				if(ExternalInterface.available) {
+					ExternalInterface.call(data.jsTrackFunction, data.trackingPixel);
+					//ExternalInterface.call(jsAddPixelFunction(data.trackingPixel));
+				} else {
+					navigateToURL(new URLRequest('javascript:'+data.jsTrackFunction+'("'+data.trackingPixel+'");'), '_self');
+					//navigateToURL(new URLRequest('javascript:'+jsAddPixelFunction(data.trackingPixel), '_self');
+				}
+			}
+		}
+		/*private function jsAddPixelFunction(src):String{
+			return '(function(){var i=document.createElement("img");i.style.display="none";i.src="'+src+'";i.height="1";i.width="1";i.alt="";document.body.appendChild(i);}("'+src+'"))';
+		}*/
 		private function changePage(url:*, window:String = "_blank"):void {
 			var req:URLRequest = url is String ? new URLRequest(url) : url;
 			if (!ExternalInterface.available) {

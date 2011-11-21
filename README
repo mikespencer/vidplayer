@@ -1,47 +1,41 @@
 Usage:
 
 import VidPlayer;
-
-var options = { 
-	/* see below for available options to add to this object */ 
+var options = {
+  //these are the default options for the video player. "source" is the ONLY required option here.
+  source : null,
+  width : 320,
+  height : 240,
+  buffer_time : 8,
+  autoplay : true,
+  mute : true,
+  controlsBorderFill : 0xFFFFFF,
+  buttonsBGFill : 0x000000,
+  buttonsFill : 0xFFFFFF,
+  progressFill :  [ 0x6699CC, 0x306496 ],
+  progressBGFill:  [ 0xDDDDDD, 0x666666 ],
+  poster : false,
+  controls_alpha : 0.7,
+  pause_alpha : 0.7,
+  play_alpha : 0.7,
+  x : 0,
+  y : 0,
+  useFlashVars : true,
+  standAlone : false,
+  track_play : false,
+  track_pause : false,
+  track_end : false,
+  preload : true,
+  pauseAt : false,
+  clickTag : false,
+  jsTrackFunction : false,
+	trackingPixel : false
 };
-
 var myVideoPlayer:VidPlayer = new VidPlayer( options );
-
 addChild( myVideoPlayer );
 
 
 
-Available options passed in as an object (and their default settings) - eg:
-
-{
-	width : 320,																// width of player
-	height : 240,																// height of player
-	buffer_time : 8,														// buffer time in seconds
-	source : null,																// source of video - url. (This is REQUIRED)
-	autoplay : true,														// autoplay
-	mute : true,																// mute initially
-	controlsBorderFill : 0xFFFFFF,							// 1px border colour around controls
-	buttonsBGFill : 0x000000,									// play, pause, mute, unmute buttons colour
-	buttonsFill : 0xFFFFFF,											// play, pause, mute, unmute buttons background colour
-	progressFill :  [ 0x6699CC, 0x306496 ],			// progress bar colour (gradient). [ top colour, bottom colour ]
-	progressBGFill:  [ 0xDDDDDD, 0x666666 ],	// progress background bar colour (gradient). [ top colour, bottom colour ]
-	poster : false,															// poster image url
-	controls_alpha : 0.7,												// controls alpha
-	pause_alpha : 0.7,													// pause button alpha
-	play_alpha : 0.7,														// play button alpha
-	x : 0,																				// x position of player relative to container
-	y : 0,																				// y position of player relative to container
-	useFlashVars : true,												// set to true if you intend to pass values in via flashVars (see below)
-	standAlone : false,													// set to true if you intend to use this as a standalone player that will take the height/width of the <object> tag in the HTML
-	track_play : false,													// track play clicks
-	track_pause : false,												// track pause clicks
-	track_end : false														// track when the video reaches the end
-    preload : true                                                            // load the video when fla loads (true), or start to load the video when the user clicks play (false)
-}
-
-
-
-These can all be passed in via FlashVars in the HTML - eg:
+The options can all also be passed in via FlashVars in the HTML - eg:
 
 <param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&autoplay=false&mute=false" />
