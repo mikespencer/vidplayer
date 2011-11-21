@@ -42,7 +42,7 @@
                   source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
                   poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
                   autoplay : false,
-                  jsTrackingFunction : 'function(a){try{console.log(a)}catch(e){}}', //log the trackingPixel for a test
+                  jsTrackingFunction : 'function(a){try{console.log(a)}catch(e){}}',  //log the trackingPixel for a test
                   trackingPixel : 'interaction - usually this would be url of tracking pixel src'
                 });
             }
@@ -77,16 +77,3 @@
 
 	</body>
 </html>
-
-<!--
-
-var arg1 = thisMovie("videoPlayer").attr();
-var arg2 = {
-  source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
-  poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
-  autoplay : false
-};
-
-thisMovie("videoPlayer").attr(arg1);
-
--->
