@@ -58,7 +58,10 @@
           thisMovie("videoPlayer").bind('pause','log','video paused');
           
           //this will unbind any pause events from the video player:
-          //thisMovie("videoPlayer").unbind('pause');
+          $('#unbind').click(function(){
+            thisMovie("videoPlayer").unbind('pause');
+            log("pause event listener removed")
+          }).css({cursor:"pointer"})
         });
 
     </script>
