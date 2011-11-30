@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<title>demo</title>
+    		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
+
 		<script type="text/javascript">
     // this is for tracking for when video is played, paused, or ends:
 			var wpAd = typeof wpAd === 'undefined' ? {} : wpAd;
@@ -27,29 +29,46 @@
 				}
 			}
 		</script>
+
+    <script type="text/javascript">
+        function thisMovie(movieName) {
+            if (navigator.appName.indexOf("Microsoft") != -1) {
+                return window[movieName];
+            } else {
+                return document[movieName];
+            }
+        }
+        function changeMovie() {
+            //this will track general interaction with video player and also will switch video/poster etc
+            thisMovie("videoPlayer").attr({
+              source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
+              poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
+              autoplay : false,
+              jsTrackingFunction : 'function(a){try{console.log(a)}catch(e){}}',  //log the trackingPixel for a test
+              trackingPixel : 'interaction - usually this would be url of tracking pixel src'
+            });
+        }
         
-        <script type="text/javascript">
-            function thisMovie(movieName) {
-                if (navigator.appName.indexOf("Microsoft") != -1) {
-                    return window[movieName];
-                } else {
-                    return document[movieName];
-                }
-            }
-            function changeMovie() {
-                //this will track general interaction with video player and also will switch video/poster etc
-                thisMovie("videoPlayer").attr({
-                  source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
-                  poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
-                  autoplay : false,
-                  jsTrackingFunction : 'function(a){try{console.log(a)}catch(e){}}',  //log the trackingPixel for a test
-                  trackingPixel : 'interaction - usually this would be url of tracking pixel src'
-                });
-            }
-        </script>
+        function log(arg){
+          try{console.log(arg)}catch(e){}
+        }
+       
+        $(function(){
+          //this will log "video paused" when a user pauses the video:
+          thisMovie("videoPlayer").bind('pause','log','video paused');
+          
+          //this will unbind any pause events from the video player:
+          //thisMovie("videoPlayer").unbind('pause');
+        });
+
+    </script>
         
 	</head>
 	<body>
+  
+  <p id="unbind">
+  Click here to unbind pause event
+  </p>
 	
 		<object type="application/x-shockwave-flash" data="VidPlayer.swf" width="700" height="400" id="videoPlayer" name="videoPlayer" style="outline:none;">
 			<param name="movie" value="VidPlayer.swf" />
@@ -73,7 +92,6 @@
 	<param name="movie" value="VidPlayer.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#000000" />	<embed src="VidPlayer.swf" quality="high" bgcolor="#000000" width="700" height="400" name="videoPlayer" align="middle" flashvars="source=http://media.washingtonpost.com/media/2011/05/31/05312011-50v.m4v&autoplay=false&standAlone=true&preload=false&poster=http://media.washingtonpost.com/wp-adv/test/mstest/poster.jpg&track_pause=true&track_play=true&track_end=true" allowScriptAccess="always" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />
 	</object-->
         
-		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
 
 	</body>
 </html>

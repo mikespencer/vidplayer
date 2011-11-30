@@ -2,6 +2,7 @@
 	
 	//import required classes
 	import com.greensock.*;
+	import VidPlayerEvent;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -90,6 +91,28 @@
 		private var nsStream:NetStream;
 		private var meta:Object;
 		private var pauseAt:uint;
+		private var playEvt:VidPlayerEvent = new VidPlayerEvent('play');
+		private var pauseEvt:VidPlayerEvent = new VidPlayerEvent('pause');
+		private var stopEvt:VidPlayerEvent = new VidPlayerEvent('stop');
+		private var scrubEvt:VidPlayerEvent = new VidPlayerEvent('scrub');
+		private var muteEvt:VidPlayerEvent = new VidPlayerEvent('mute');
+		private var unmuteEvt:VidPlayerEvent = new VidPlayerEvent('unmute');
+		private var vidPlayerEventCache = {
+			"play" : [],
+			"pause" : [],
+			"stop" : [],
+			"scrub" : [],
+			"mute" : [],
+			"unmute" : []
+		};
+		private var vidPlayerEvents = {
+			"play" : VidPlayerEvent.PLAY,
+			"pause" : VidPlayerEvent.PAUSE,
+			"stop" : VidPlayerEvent.STOP,
+			"mute" : VidPlayerEvent.MUTE,
+			"unmute" : VidPlayerEvent.UNMUTE,
+			"scrub" : VidPlayerEvent.SCRUB
+		}
 		
 		//constructor
 		public function VidPlayer(obj:Object = null) {
@@ -536,6 +559,7 @@ import flash.display.Loader;
 		}
 		
 		public function stopVideoPlayer(){
+			dispatchEvent(stopEvt);
 			isStopped = true;
 			nsStream.pause();
 			nsStream.seek(0);
@@ -628,6 +652,7 @@ import flash.display.Loader;
 		}
 		public function mute(e:Event = null){
 			addPixel(e);
+			if(e){dispatchEvent(muteEvt);}
 			setVolume(0);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
 				clearpauseAt();
@@ -635,6 +660,7 @@ import flash.display.Loader;
 		}
 		public function unMute(e:Event = null){
 			addPixel(e);
+			if(e){dispatchEvent(unmuteEvt);}
 			setVolume(1);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
 				clearpauseAt();
@@ -642,6 +668,8 @@ import flash.display.Loader;
 		}
 		public function playClicked(e:Event = null){
 			addPixel(e);
+			if(e){dispatchEvent(playEvt);}
+			
 			if((!data.preload || data.preload === 'false') && !data.preloadLoaded){
 				nsStream.play(data.source);
 				nsStream.pause();
@@ -672,6 +700,7 @@ import flash.display.Loader;
 		}		
 		public function pauseClicked(e:Event = null){
 			addPixel(e);
+			if(e){dispatchEvent(pauseEvt);}
 			nsStream.pause();
 			wrapper.removeEventListener(MouseEvent.MOUSE_OVER, show_controls);
 			wrapper.removeEventListener(MouseEvent.MOUSE_OUT, hide_controls);		
@@ -730,6 +759,7 @@ import flash.display.Loader;
 		}
 		private function stop_mov_seek(e:MouseEvent):void{
 			addPixel(e);
+			if(e){dispatchEvent(scrubEvt);}
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.removeEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
 			if(!isBuffering)wrapper.addEventListener(MouseEvent.MOUSE_OUT, hide_controls);
@@ -798,7 +828,7 @@ import flash.display.Loader;
 			}
 			return data;
 		}
-		public function addPixel(e){
+		public function addPixel(e):void{
 			if(e && data.jsTrackFunction && data.trackingPixel){
 				if(ExternalInterface.available) {
 					ExternalInterface.call(data.jsTrackFunction, data.trackingPixel);
@@ -809,9 +839,33 @@ import flash.display.Loader;
 				}
 			}
 		}
-		/*private function jsAddPixelFunction(src):String{
-			return '(function(){var i=document.createElement("img");i.style.display="none";i.src="'+src+'";i.height="1";i.width="1";i.alt="";document.body.appendChild(i);}("'+src+'"))';
-		}*/
+		
+		//4 optional arguments added
+		public function bind(evt:String, fn:String, arg1='', arg2='', arg3='', arg4=''):void{
+			var extIntCall = function(e){
+				ExternalInterface.call(fn,arg1,arg2,arg3,arg4);
+			}
+			if(vidPlayerEvents.hasOwnProperty(evt)){
+				this.addEventListener(vidPlayerEvents[evt], extIntCall)
+				vidPlayerEventCache[evt].push(extIntCall);
+			}
+		}
+		
+		public function unbind(e:String = null):void{
+			var key:String, len:Number, i:Number;
+			for(key in vidPlayerEventCache){
+				if(e == null || e == key){
+					len=vidPlayerEventCache[key].length;
+					for(i = 0; i<len; i++){
+						if(this.hasEventListener(vidPlayerEvents[key])){
+							this.removeEventListener(vidPlayerEvents[key], vidPlayerEventCache[key][i]);
+						}
+					}
+					vidPlayerEventCache[key] = [];
+				}
+			}
+		}
+		
 		private function changePage(url:*, window:String = "_blank"):void {
 			var req:URLRequest = url is String ? new URLRequest(url) : url;
 			if (!ExternalInterface.available) {
