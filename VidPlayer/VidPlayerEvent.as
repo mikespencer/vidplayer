@@ -1,4 +1,4 @@
-﻿package {
+﻿package VidPlayer {
 	
 	import flash.events.Event;
 	public class VidPlayerEvent extends Event {

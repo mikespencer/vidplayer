@@ -1,8 +1,8 @@
-﻿package {
+﻿package VidPlayer {
 	
 	//import required classes
 	import com.greensock.*;
-	import VidPlayerEvent;
+	import VidPlayer.VidPlayerEvent;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
@@ -91,28 +91,39 @@
 		private var nsStream:NetStream;
 		private var meta:Object;
 		private var pauseAt:uint;
+		private var isMessage:Boolean = false;
 		private var playEvt:VidPlayerEvent = new VidPlayerEvent('play');
 		private var pauseEvt:VidPlayerEvent = new VidPlayerEvent('pause');
 		private var stopEvt:VidPlayerEvent = new VidPlayerEvent('stop');
 		private var scrubEvt:VidPlayerEvent = new VidPlayerEvent('scrub');
 		private var muteEvt:VidPlayerEvent = new VidPlayerEvent('mute');
 		private var unmuteEvt:VidPlayerEvent = new VidPlayerEvent('unmute');
-		private var vidPlayerEventCache = {
-			"play" : [],
-			"pause" : [],
-			"stop" : [],
-			"scrub" : [],
-			"mute" : [],
-			"unmute" : []
-		};
 		private var vidPlayerEvents = {
-			"play" : VidPlayerEvent.PLAY,
-			"pause" : VidPlayerEvent.PAUSE,
-			"stop" : VidPlayerEvent.STOP,
-			"mute" : VidPlayerEvent.MUTE,
-			"unmute" : VidPlayerEvent.UNMUTE,
-			"scrub" : VidPlayerEvent.SCRUB
-		}
+			"play" : {
+				"type" : VidPlayerEvent.PLAY,
+				"fncache" : []
+			},
+			"pause" : {
+				"type" : VidPlayerEvent.PAUSE,
+				"fncache" : []
+			},
+			"stop" : {
+				"type" : VidPlayerEvent.STOP,
+				"fncache" : []
+			},
+			"mute" : {
+				"type" : VidPlayerEvent.MUTE,
+				"fncache" : []
+			},
+			"unmute" : {
+				"type" : VidPlayerEvent.UNMUTE,
+				"fncache" : []
+			},
+			"scrub" : {
+				"type" : VidPlayerEvent.SCRUB,
+				"fncache" : []
+			}
+		};
 		
 		//constructor
 		public function VidPlayer(obj:Object = null) {
@@ -170,7 +181,6 @@
 				nsStream.pause();
 				nsStream.seek(0);
 			}
-import flash.display.Loader;
 
 			lastVolume = data.mute && data.mute != 'false' ? 0 : 1;
 			setVolume(lastVolume)
@@ -493,6 +503,7 @@ import flash.display.Loader;
 			wrapper.addChildAt(message_mc, wrapper.getChildIndex(controls_mc)-1); //add message_mc behind controls_mc
 
 			TweenLite.to(message_mc, fade_speed, {alpha:1});
+			isMessage=true;
 		}
 		
 		public function removeMessage(fade_speed:Number = 0.3){
@@ -502,6 +513,7 @@ import flash.display.Loader;
 					message_mc.removeChildAt(l);
 				}
 				wrapper.removeChild(message_mc);
+				isMessage=false;
 			}});
 		}
 		
@@ -668,7 +680,8 @@ import flash.display.Loader;
 		}
 		public function playClicked(e:Event = null){
 			addPixel(e);
-			if(e){dispatchEvent(playEvt);}
+			if(e){dispatchEvent(playEvt)}
+			if(isMessage){try{removeMessage()}catch(e){}}
 			
 			if((!data.preload || data.preload === 'false') && !data.preloadLoaded){
 				nsStream.play(data.source);
@@ -846,22 +859,20 @@ import flash.display.Loader;
 				ExternalInterface.call(fn,arg1,arg2,arg3,arg4);
 			}
 			if(vidPlayerEvents.hasOwnProperty(evt)){
-				this.addEventListener(vidPlayerEvents[evt], extIntCall)
-				vidPlayerEventCache[evt].push(extIntCall);
+				this.addEventListener(vidPlayerEvents[evt].type, extIntCall)
+				vidPlayerEvents[evt].fncache.push(extIntCall);
 			}
 		}
 		
 		public function unbind(e:String = null):void{
 			var key:String, len:Number, i:Number;
-			for(key in vidPlayerEventCache){
-				if(e == null || e == key){
-					len=vidPlayerEventCache[key].length;
+			for(key in vidPlayerEvents){
+				if((e == null || e == key) && this.hasEventListener(vidPlayerEvents[key].type)){
+					len=vidPlayerEvents[key].fncache.length;
 					for(i = 0; i<len; i++){
-						if(this.hasEventListener(vidPlayerEvents[key])){
-							this.removeEventListener(vidPlayerEvents[key], vidPlayerEventCache[key][i]);
-						}
+						this.removeEventListener(vidPlayerEvents[key].type, vidPlayerEvents[key].fncache[i]);
 					}
-					vidPlayerEventCache[key] = [];
+					vidPlayerEvents[key].fncache = [];
 				}
 			}
 		}

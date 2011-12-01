@@ -1,6 +1,6 @@
-FLASH USAGE:
+-- FLASH USAGE: --
 
-import VidPlayer;
+import VidPlayer.VidPlayer;
 var options = {
   //these are the default options for the video player. "source" is the ONLY required option here.
   source : null,
@@ -37,11 +37,11 @@ addChild( myVideoPlayer );
 
 
 The options can all also be passed in via FlashVars in the HTML - eg:
-
 <param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&autoplay=false&mute=false" />
 
 
-EMBED INTO HTML EXAMPLE:
+-- EMBED INTO HTML: --
+
 <object type="application/x-shockwave-flash" data="VidPlayer.swf" width="700" height="400" id="videoPlayer" name="videoPlayer" style="outline:none;">
   <param name="movie" value="VidPlayer.swf" />
   <param name="quality" value="high" />
@@ -51,13 +51,14 @@ EMBED INTO HTML EXAMPLE:
   <param name="menu" value="true" />
   <param name="devicefont" value="false" />
   <param name="allowScriptAccess" value="always" />
-  <param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&mute=false&autoplay=false" />
+  <param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&mute=false&autoplay=false&standAlone=true" />
 </object>
 
 
 
-JavaScript interaction:
+--- JavaScript interaction: ---
 
+//function for referencing the video player swf
 function thisMovie(movieName) {
   if (navigator.appName.indexOf("Microsoft") != -1) {
     return window[movieName];
@@ -79,8 +80,9 @@ thisMovie("ID/name of video player swf").attr({
 });
 
 
+
 bind:
-USAGE: bind(event:String, javascript function:String, param1(optional), param2(optional), param3(optional), param4(optional));
+USAGE: bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
 can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub"
 
 EXAMPLE:
@@ -88,25 +90,34 @@ this will call 'console.log("video has been paused")' when the user pauses the v
 thisMovie("ID/name of video player swf").bind('pause','console.log','video has been paused')
 
 
+
+unbind:
+USAGE: unbind(event:String);
+the "event" argument is optional. If omitted, all bind events will be cleared.
+
+EXAMPLE:
+this will clear all 'pause' events added via bind:
+thisMovie("ID/name of video player swf").unbind('pause');
+
+
+
+--- BASIC CONTROLS WITH JAVASCRIPT: ---
+
 play:
 EXAMPLE:
 thisMovie("ID/name of video player swf").play();
-
 
 pause:
 EXAMPLE:
 thisMovie("ID/name of video player swf").pause();
 
-
 stop:
 EXAMPLE:
 thisMovie("ID/name of video player swf").stop();
 
-
 mute:
 EXAMPLE:
 thisMovie("ID/name of video player swf").mute();
-
 
 unmute:
 EXAMPLE:
