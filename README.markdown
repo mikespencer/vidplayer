@@ -70,22 +70,22 @@ function for referencing the video player swf
     }
 
 
-###attr:
+##attr:
 ####USAGE: 
 
     attr(object with video player options:Object);
 
 ####EXAMPLE:
 this will switch video and poster when called and will start playing the new video:
->thisMovie("ID/name of video player swf").attr({
->  source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
->  poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
->  autoplay : false
->});
+    thisMovie("ID/name of video player swf").attr({
+      source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
+      poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
+      autoplay : false
+    });
 
 
 
-###bind:
+##bind:
 ####USAGE: 
 
     bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
@@ -100,7 +100,7 @@ this will call 'console.log("video has been paused")' when the user pauses the v
 
 
 
-###unbind:
+##unbind:
 ####USAGE: 
 
     unbind(event:String);
@@ -117,22 +117,22 @@ this will clear all 'pause' events added via bind:
 
 ##BASIC CONTROLS WITH JAVASCRIPT:
 
-###play:
+##play:
 EXAMPLE:
     thisMovie("ID/name of video player swf").play();
 
-###pause:
+##pause:
 EXAMPLE:
     thisMovie("ID/name of video player swf").pause();
 
-###stop:
+##stop:
 EXAMPLE:
     thisMovie("ID/name of video player swf").stop();
 
-###mute:
+##mute:
 EXAMPLE:
     thisMovie("ID/name of video player swf").mute();
 
-###unmute:
+##unmute:
 EXAMPLE:
     thisMovie("ID/name of video player swf").unmute();
