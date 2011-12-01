@@ -36,8 +36,7 @@
 
 
 
-###The options can all also be passed in via FlashVars in the HTML - eg:
-
+The options can all also be passed in via FlashVars in the HTML - eg:
     <param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&autoplay=false&mute=false" />
 
 
@@ -71,11 +70,11 @@ function for referencing the video player swf
 
 
 ##attr:
-####USAGE: 
+######USAGE: 
 
     attr(object with video player options:Object);
 
-####EXAMPLE:
+######EXAMPLE:
 this will switch video and poster when called and will start playing the new video:
     thisMovie("ID/name of video player swf").attr({
       source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
@@ -86,13 +85,13 @@ this will switch video and poster when called and will start playing the new vid
 
 
 ##bind:
-####USAGE: 
+######USAGE: 
 
     bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
     
 can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub"
 
-####EXAMPLE:
+######EXAMPLE:
 
 this will call 'console.log("video has been paused")' when the user pauses the video:
 
@@ -101,13 +100,13 @@ this will call 'console.log("video has been paused")' when the user pauses the v
 
 
 ##unbind:
-####USAGE: 
+######USAGE: 
 
     unbind(event:String);
     
 the "event" argument is optional. If omitted, all bind events will be cleared.
 
-####EXAMPLE:
+######EXAMPLE:
 
 this will clear all 'pause' events added via bind:
     
@@ -118,21 +117,21 @@ this will clear all 'pause' events added via bind:
 ##BASIC CONTROLS WITH JAVASCRIPT:
 
 ##play:
-EXAMPLE:
+######EXAMPLE:
     thisMovie("ID/name of video player swf").play();
 
 ##pause:
-EXAMPLE:
+######EXAMPLE:
     thisMovie("ID/name of video player swf").pause();
 
 ##stop:
-EXAMPLE:
+######EXAMPLE:
     thisMovie("ID/name of video player swf").stop();
 
 ##mute:
-EXAMPLE:
+######EXAMPLE:
     thisMovie("ID/name of video player swf").mute();
 
 ##unmute:
-EXAMPLE:
+######EXAMPLE:
     thisMovie("ID/name of video player swf").unmute();
