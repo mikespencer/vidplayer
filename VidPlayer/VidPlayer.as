@@ -98,7 +98,7 @@
 		private var scrubEvt:VidPlayerEvent = new VidPlayerEvent('scrub');
 		private var muteEvt:VidPlayerEvent = new VidPlayerEvent('mute');
 		private var unmuteEvt:VidPlayerEvent = new VidPlayerEvent('unmute');
-		private var interactEvt:VidPlayerEvent = new VidPlayerEvent('interact');
+		private var allEvt:VidPlayerEvent = new VidPlayerEvent('all');
 		private var vidPlayerEvents = {
 			"play" : {
 				"type" : VidPlayerEvent.PLAY,
@@ -124,8 +124,8 @@
 				"type" : VidPlayerEvent.SCRUB,
 				"fncache" : []
 			},
-			"interact" : {
-				"type" : VidPlayerEvent.INTERACT,
+			"all" : {
+				"type" : VidPlayerEvent.ALL,
 				"fncache" : []
 			}
 		};
@@ -671,7 +671,7 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(muteEvt);
-				dispatchEvent(interactEvt);
+				dispatchEvent(allEvt);
 			}
 			setVolume(0);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
@@ -682,7 +682,7 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(unmuteEvt);
-				dispatchEvent(interactEvt);
+				dispatchEvent(allEvt);
 			}
 			setVolume(1);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
@@ -693,7 +693,7 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(playEvt);
-				dispatchEvent(interactEvt);
+				dispatchEvent(allEvt);
 			}
 			if(isMessage){try{removeMessage()}catch(e){}}
 			
@@ -729,7 +729,7 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(pauseEvt);
-				dispatchEvent(interactEvt);
+				dispatchEvent(allEvt);
 			}
 			nsStream.pause();
 			wrapper.removeEventListener(MouseEvent.MOUSE_OVER, show_controls);
@@ -791,7 +791,7 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(scrubEvt);
-				dispatchEvent(interactEvt);
+				dispatchEvent(allEvt);
 			}
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.removeEventListener(Event.MOUSE_LEAVE, stop_mov_seek);

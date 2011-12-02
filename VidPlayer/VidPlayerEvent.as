@@ -9,7 +9,7 @@
 		public static const SCRUB:String = "scrub";
 		public static const MUTE:String = "mute";
 		public static const UNMUTE:String = "unmute";
-		public static const INTERACT:String = "interact";		
+		public static const ALL:String = "all";		
 
 		public function VidPlayerEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false):void {
 			super(type, bubbles, cancelable);
