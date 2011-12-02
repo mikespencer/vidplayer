@@ -5,6 +5,7 @@
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
 		<script type="text/javascript">
     
+    
       function thisMovie(movieName) {
         if (navigator.appName.indexOf("Microsoft") != -1) {
           return window[movieName];
@@ -37,13 +38,16 @@
         try{console.log(arg)}catch(e){}
       }
 
-      $(function(){
+     $(window).load(function(){
+        //jQuery selector
+        //$('#videoPlayer')[0].bind('all','log','this will fire for any interaction');
+        
         //this will log "video paused" when a user pauses the video:
         thisMovie("videoPlayer").bind('pause','log','video paused');
-        
+          
         //fire track function to track video stop:
        thisMovie("videoPlayer").bind('stop','addPixel','stop_pixel_src');        
-       
+             
        //fire track function to track video stop:
        //thisMovie("videoPlayer").bind('pause','addPixel','pause_pixel_src');
 
@@ -63,8 +67,8 @@
       Click here to unbind pause event
     </p>
   
-    <object type="application/x-shockwave-flash" data="VidPlayer.swf" width="700" height="400" id="videoPlayer" name="videoPlayer" style="outline:none;">
-      <param name="movie" value="VidPlayer.swf" />
+    <object type="application/x-shockwave-flash" data="http://www.washingtonpost.com/wp-srv/ad/VidPlayer.swf" width="700" height="400" id="videoPlayer" name="videoPlayer" style="outline:none;">
+      <param name="movie" value="http://www.washingtonpost.com/wp-srv/ad/VidPlayer.swf" />
       <param name="quality" value="high" />
       <param name="bgcolor" value="#000000" />
       <param name="wmode" value="transparent" />

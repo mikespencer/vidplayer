@@ -98,7 +98,6 @@
 		private var scrubEvt:VidPlayerEvent = new VidPlayerEvent('scrub');
 		private var muteEvt:VidPlayerEvent = new VidPlayerEvent('mute');
 		private var unmuteEvt:VidPlayerEvent = new VidPlayerEvent('unmute');
-		private var allEvt:VidPlayerEvent = new VidPlayerEvent('all');
 		private var vidPlayerEvents = {
 			"play" : {
 				"type" : VidPlayerEvent.PLAY,
@@ -122,10 +121,6 @@
 			},
 			"scrub" : {
 				"type" : VidPlayerEvent.SCRUB,
-				"fncache" : []
-			},
-			"all" : {
-				"type" : VidPlayerEvent.ALL,
 				"fncache" : []
 			}
 		};
@@ -671,7 +666,6 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(muteEvt);
-				dispatchEvent(allEvt);
 			}
 			setVolume(0);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
@@ -682,7 +676,6 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(unmuteEvt);
-				dispatchEvent(allEvt);
 			}
 			setVolume(1);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
@@ -693,7 +686,6 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(playEvt);
-				dispatchEvent(allEvt);
 			}
 			if(isMessage){try{removeMessage()}catch(e){}}
 			
@@ -729,7 +721,6 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(pauseEvt);
-				dispatchEvent(allEvt);
 			}
 			nsStream.pause();
 			wrapper.removeEventListener(MouseEvent.MOUSE_OVER, show_controls);
@@ -791,7 +782,6 @@
 			addPixel(e);
 			if(e){
 				dispatchEvent(scrubEvt);
-				dispatchEvent(allEvt);
 			}
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.removeEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
@@ -878,16 +868,25 @@
 			var extIntCall = function(e){
 				ExternalInterface.call(fn,arg1,arg2,arg3,arg4);
 			}
-			if(vidPlayerEvents.hasOwnProperty(evt)){
-				this.addEventListener(vidPlayerEvents[evt].type, extIntCall)
-				vidPlayerEvents[evt].fncache.push(extIntCall);
+			if(vidPlayerEvents.hasOwnProperty(evt) || evt == 'all'){
+				if(evt == 'all'){
+					for(var key in vidPlayerEvents){
+						if(key != 'stop'){
+							this.addEventListener(vidPlayerEvents[key].type, extIntCall)
+							vidPlayerEvents[key].fncache.push(extIntCall);
+						}
+					}
+				} else {
+					this.addEventListener(vidPlayerEvents[evt].type, extIntCall)
+					vidPlayerEvents[evt].fncache.push(extIntCall);
+				}
 			}
 		}
 		
 		public function unbind(e:String = null):void{
 			var key:String, len:Number, i:Number;
 			for(key in vidPlayerEvents){
-				if((e == null || e == key) && this.hasEventListener(vidPlayerEvents[key].type)){
+				if((e == null || e == key || (e == 'all' && key != 'stop')) && this.hasEventListener(vidPlayerEvents[key].type)){
 					len=vidPlayerEvents[key].fncache.length;
 					for(i = 0; i<len; i++){
 						this.removeEventListener(vidPlayerEvents[key].type, vidPlayerEvents[key].fncache[i]);
