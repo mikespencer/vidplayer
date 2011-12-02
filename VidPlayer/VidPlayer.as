@@ -98,6 +98,7 @@
 		private var scrubEvt:VidPlayerEvent = new VidPlayerEvent('scrub');
 		private var muteEvt:VidPlayerEvent = new VidPlayerEvent('mute');
 		private var unmuteEvt:VidPlayerEvent = new VidPlayerEvent('unmute');
+		private var interactEvt:VidPlayerEvent = new VidPlayerEvent('interact');
 		private var vidPlayerEvents = {
 			"play" : {
 				"type" : VidPlayerEvent.PLAY,
@@ -121,6 +122,10 @@
 			},
 			"scrub" : {
 				"type" : VidPlayerEvent.SCRUB,
+				"fncache" : []
+			},
+			"interact" : {
+				"type" : VidPlayerEvent.INTERACT,
 				"fncache" : []
 			}
 		};
@@ -664,7 +669,10 @@
 		}
 		public function mute(e:Event = null){
 			addPixel(e);
-			if(e){dispatchEvent(muteEvt);}
+			if(e){
+				dispatchEvent(muteEvt);
+				dispatchEvent(interactEvt);
+			}
 			setVolume(0);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
 				clearpauseAt();
@@ -672,7 +680,10 @@
 		}
 		public function unMute(e:Event = null){
 			addPixel(e);
-			if(e){dispatchEvent(unmuteEvt);}
+			if(e){
+				dispatchEvent(unmuteEvt);
+				dispatchEvent(interactEvt);
+			}
 			setVolume(1);
 			if(!interacted && !!data.pauseAt && data.pauseAt != 'false'){
 				clearpauseAt();
@@ -680,7 +691,10 @@
 		}
 		public function playClicked(e:Event = null){
 			addPixel(e);
-			if(e){dispatchEvent(playEvt)}
+			if(e){
+				dispatchEvent(playEvt);
+				dispatchEvent(interactEvt);
+			}
 			if(isMessage){try{removeMessage()}catch(e){}}
 			
 			if((!data.preload || data.preload === 'false') && !data.preloadLoaded){
@@ -713,7 +727,10 @@
 		}		
 		public function pauseClicked(e:Event = null){
 			addPixel(e);
-			if(e){dispatchEvent(pauseEvt);}
+			if(e){
+				dispatchEvent(pauseEvt);
+				dispatchEvent(interactEvt);
+			}
 			nsStream.pause();
 			wrapper.removeEventListener(MouseEvent.MOUSE_OVER, show_controls);
 			wrapper.removeEventListener(MouseEvent.MOUSE_OUT, hide_controls);		
@@ -772,7 +789,10 @@
 		}
 		private function stop_mov_seek(e:MouseEvent):void{
 			addPixel(e);
-			if(e){dispatchEvent(scrubEvt);}
+			if(e){
+				dispatchEvent(scrubEvt);
+				dispatchEvent(interactEvt);
+			}
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.removeEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
 			if(!isBuffering)wrapper.addEventListener(MouseEvent.MOUSE_OUT, hide_controls);

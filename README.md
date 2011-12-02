@@ -91,7 +91,7 @@ this will switch video and poster when called and will start playing the new vid
 
     bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
     
-can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub"
+can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub", "interact"
 
 ######EXAMPLE:
 
