@@ -29,7 +29,8 @@
       pauseAt : false,
       clickTag : false,
       jsTrackFunction : false,
-      trackingPixel : false
+      trackingPixel : false,
+      letterBox : false
     };
     var myVideoPlayer:VidPlayer = new VidPlayer( options );
     addChild( myVideoPlayer );
