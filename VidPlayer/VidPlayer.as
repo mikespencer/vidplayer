@@ -64,7 +64,8 @@
 			pauseAt : false,
 			clickTag : false,
 			jsTrackFunction : false,
-			trackingPixel : false
+			trackingPixel : false,
+			letterBox : false
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -89,7 +90,7 @@
 		private var vidDisplay:Video;
 		private var ncConnection:NetConnection;
 		private var nsStream:NetStream;
-		private var meta:Object;
+		private var meta = null;
 		private var pauseAt:uint;
 		private var isMessage:Boolean = false;
 		private var playEvt:VidPlayerEvent = new VidPlayerEvent('play');
@@ -158,7 +159,7 @@
 			else{
 				trace("A \"source\" property is required for VidPlayer. This can still be passed in via flashVars.");
 			}
-		}		
+		}
 		
 		private function init(){		
 			this.addChild(wrapper);
@@ -597,11 +598,32 @@
 			hide_btnPause();
 		}
 		
-		private function metaHandler(info:Object):void {
-			meta=info;
-			tmrDisplay.start();
+		private function letterBox(container, target, vOffset:Number = 0){
+			var ratio = Math.min(container.width / target.width, container.height / target.height);
+			target.width = target.width * ratio;
+			target.height = target.height * ratio;			
+			if(target.height < container.height){
+				target.y = (container.height/2)-(target.height/2)-vOffset; 
+			} else{
+				target.x = (container.width/2)-(target.width/2); 
+			}
 		}
 
+		private function metaHandler(info:Object):void {
+			// this function is fired twice, for some reason, so this check prevents the below executing more than once per video
+			if(!meta){
+				meta=info;
+				if(data.letterBox && data.letterBox != 'false' && meta.hasOwnProperty('height') && meta.hasOwnProperty('width')){
+					vidDisplay.width = meta['width'];
+					vidDisplay.height = meta['height'];
+					vidDisplay.x = data.x;
+					vidDisplay.y = data.y;
+					letterBox({ width : data.width, height : data.height },vidDisplay);
+				}
+				vidDisplay.visible=true;
+				tmrDisplay.start();
+			}
+		}
 
 		private function updateDisplay(e){
 			mcProgressFill.width= nsStream.time*trackBG.width/meta.duration;
@@ -815,6 +837,10 @@
 			hide_controls();
 		}
 		public function switchVideo(video = false){
+			//more for use with letterBox'ing
+			meta = null;
+			vidDisplay.visible=false;
+			
 			if(video){
 				oldSwitchVideo(video);
 				return true;

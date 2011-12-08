@@ -43,19 +43,32 @@
         //$('#videoPlayer')[0].bind('all','log','this will fire for any interaction');
         
         //this will log "video paused" when a user pauses the video:
-        thisMovie("videoPlayer").bind('pause','log','video paused');
+        //thisMovie("videoPlayer").bind('pause','log','video paused');
           
         //fire track function to track video stop:
-       thisMovie("videoPlayer").bind('stop','addPixel','stop_pixel_src');        
+       //thisMovie("videoPlayer").bind('stop','addPixel','stop_pixel_src');        
              
        //fire track function to track video stop:
-       //thisMovie("videoPlayer").bind('pause','addPixel','pause_pixel_src');
+       thisMovie("videoPlayer").bind('pause','addPixel','pause_pixel_src');
 
         //this will unbind any pause events from the video player:
         $('#unbind').click(function(){
           thisMovie("videoPlayer").unbind('pause');
           log("pause event listener removed")
         }).css({cursor:"pointer"})
+        
+        $('#vid2').click(function(){
+          thisMovie("videoPlayer").attr({
+            "source" : "http://videoads.washingtonpost.com/November10_H264.flv"
+          })
+        }).css({cursor:"pointer"})
+        
+        $('#vid1').click(function(){
+          thisMovie("videoPlayer").attr({
+            "source" : "http://videoads.washingtonpost.com/70549266.flv"
+          })
+        }).css({cursor:"pointer"})
+        
       });
 
     </script>
@@ -66,17 +79,19 @@
     <p id="unbind">
       Click here to unbind pause event
     </p>
+    <p id="vid1">vid1</p>
+    <p id="vid2">vid2</p>
   
-    <object type="application/x-shockwave-flash" data="http://www.washingtonpost.com/wp-srv/ad/VidPlayer.swf" width="700" height="400" id="videoPlayer" name="videoPlayer" style="outline:none;">
-      <param name="movie" value="http://www.washingtonpost.com/wp-srv/ad/VidPlayer.swf" />
+    <object type="application/x-shockwave-flash" data="VidPlayer.swf" width="600" height="400" id="videoPlayer" name="videoPlayer" style="outline:none;">
+      <param name="movie" value="VidPlayer.swf" />
       <param name="quality" value="high" />
-      <param name="bgcolor" value="#000000" />
-      <param name="wmode" value="transparent" />
+      <param name="bgcolor" value="#333333" />
+      <param name="wmode" value="opaque" />
       <param name="scale" value="noscale " />
       <param name="menu" value="true" />
       <param name="devicefont" value="false" />
       <param name="allowScriptAccess" value="always" />
-      <param name="flashVars" value="source=http://videoads.washingtonpost.com/son_in_law_tv.f4v&mute=false&autoplay=false&standAlone=true&poster=http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg" />
+      <param name="flashVars" value="source=http://videoads.washingtonpost.com/70549266.flv&mute=false&autoplay=false&standAlone=true&letterBox=true&poster=http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg" />
     </object>
     
 	</body>
