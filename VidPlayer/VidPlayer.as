@@ -65,7 +65,9 @@
 			clickTag : false,
 			jsTrackFunction : false,
 			trackingPixel : false,
-			letterBox : false
+			letterBox : false,
+			previewSource: null,
+			fullSource: null
 		};
 		private var isBuffering:Boolean = false;
 		private var isStopped:Boolean = true;
@@ -148,6 +150,12 @@
 					}
 				}
 			}
+			
+			if(data.previewSource!==null){
+				data.fullSource = data.source;
+				data.source = data.previewSource;
+			}
+
 			if(data.source){
 				if(data.standAlone && data.standAlone != 'false'){
 					isStandAlonePlayer();
@@ -802,14 +810,16 @@
 		}
 		private function stop_mov_seek(e:MouseEvent):void{
 			addPixel(e);
-			if(e){
-				dispatchEvent(scrubEvt);
-			}
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stop_mov_seek);
 			stage.removeEventListener(Event.MOUSE_LEAVE, stop_mov_seek);
 			if(!isBuffering)wrapper.addEventListener(MouseEvent.MOUSE_OUT, hide_controls);
 
 			tmrDisplay.removeEventListener(TimerEvent.TIMER, mov_seek);
+			
+			if(e){
+				dispatchEvent(scrubEvt);
+			}
+
 		}
 		private function mov_seek(e:TimerEvent){
 			nsStream.seek( Math.round((controls_mc.mouseX < mcProgressBG.width ? controls_mc.mouseX : mcProgressBG.width) * meta.duration) / trackBG.width); //the check is to stop you scrubbing past what is buffered
@@ -890,8 +900,8 @@
 		}
 		
 		//4 optional arguments added
-		public function bind(evt:String, fn:String, arg1='', arg2='', arg3='', arg4=''):void{
-			var extIntCall = function(e){
+		public function bind(evt:String, fn:*, arg1='', arg2='', arg3='', arg4=''):void{
+			var extIntCall = fn is Function ? fn : function(e){
 				ExternalInterface.call(fn,arg1,arg2,arg3,arg4);
 			}
 			if(vidPlayerEvents.hasOwnProperty(evt) || evt == 'all'){
