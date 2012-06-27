@@ -60,7 +60,7 @@
 			track_play : false,
 			track_pause : false,
 			track_end : false,
-			preload : true,
+			preload : false,
 			pauseAt : false,
 			clickTag : false,
 			jsTrackFunction : false,
