@@ -79,7 +79,7 @@ function for referencing the video player swf
 
 
 ##attr:
-######USAGE: 
+######How to use: 
     :::javascript
     attr(object with video player options:Object);
 
@@ -96,7 +96,7 @@ this will switch video and poster when called and will start playing the new vid
 
 
 ##bind:
-######USAGE: 
+######How to use: 
 
     :::javascript
     bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
@@ -127,9 +127,9 @@ This will track render a tracking pixel on ANY interaction with the player:
    
 
 ##unbind:
-######USAGE: 
+######How to use: 
    
-   :::javascript
+    :::javascript
     unbind(event:String);
     
 the "event" argument is optional. If omitted, all bind events will be cleared.
