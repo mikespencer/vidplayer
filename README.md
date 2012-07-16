@@ -3,13 +3,17 @@
     :::javascript
     import VidPlayer.VidPlayer;
     
-    private var data = {
+    var options = {
       //these are the default options for the video player.
       //Please note that "source" is the only required property. The rest are optional.
+      
+      //required:
+      source : null, 
+      
+      //optional (along with default values if not specified):
       width : 320,
       height : 240,
       buffer_time : 8,
-      source : null, //required
       autoplay : true,
       mute : true,
       controlsBorderFill : 0xFFFFFF,
