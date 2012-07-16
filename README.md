@@ -114,7 +114,7 @@ this will call 'console.log("video has been paused")' when the user pauses the v
     :::javascript
     thisMovie("ID/name of video player swf").bind('pause','console.log','video has been paused')
 
-This will track render a tracking pixel on ANY interaction with the player:
+This will render a tracking pixel on ANY interaction with the player:
     
     
     :::javascript
