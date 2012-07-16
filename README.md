@@ -123,7 +123,7 @@ This will track render a tracking pixel on ANY interaction with the player:
       document.body.appendChild(i);
     }
     
-   thisMovie("ID/name of video player swf").bind('all','vidPlayerAddPixel','myPixelURL'); 
+    thisMovie("ID/name of video player swf").bind('all','vidPlayerAddPixel','myPixelURL'); 
    
 
 ##unbind:
