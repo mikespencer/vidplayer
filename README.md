@@ -3,40 +3,40 @@
     :::javascript
     import VidPlayer.VidPlayer;
     
-		private var data = {
-			//these are the default options for the video player.
+    private var data = {
+      //these are the default options for the video player.
       //Please note that "source" is the only required property. The rest are optional.
-			width : 320,
-			height : 240,
-			buffer_time : 8,
-			source : null, //required
-			autoplay : true,
-			mute : true,
-			controlsBorderFill : 0xFFFFFF,
-			buttonsBGFill : 0x000000,
-			buttonsFill : 0xFFFFFF,
-			progressFill :  [ 0x6699CC, 0x306496 ],
-			progressBGFill:  [ 0xDDDDDD, 0x666666 ],
-			poster : false,
-			controls_alpha : 0.7,
-			pause_alpha : 0.7,
-			play_alpha : 0.7,
-			x : 0,
-			y : 0,
-			useFlashVars : true,
-			standAlone : false,
-			track_play : false,
-			track_pause : false,
-			track_end : false,
-			preload : false,
-			pauseAt : false,
-			clickTag : false,
-			jsTrackFunction : false,
-			trackingPixel : false,
-			letterBox : false,
-			previewSource: null,
-			fullSource: null
-		};
+      width : 320,
+      height : 240,
+      buffer_time : 8,
+      source : null, //required
+      autoplay : true,
+      mute : true,
+      controlsBorderFill : 0xFFFFFF,
+      buttonsBGFill : 0x000000,
+      buttonsFill : 0xFFFFFF,
+      progressFill :  [ 0x6699CC, 0x306496 ],
+      progressBGFill:  [ 0xDDDDDD, 0x666666 ],
+      poster : false,
+      controls_alpha : 0.7,
+      pause_alpha : 0.7,
+      play_alpha : 0.7,
+      x : 0,
+      y : 0,
+      useFlashVars : true,
+      standAlone : false,
+      track_play : false,
+      track_pause : false,
+      track_end : false,
+      preload : false,
+      pauseAt : false,
+      clickTag : false,
+      jsTrackFunction : false,
+      trackingPixel : false,
+      letterBox : false,
+      previewSource: null,
+      fullSource: null
+    };
     
     var myVideoPlayer:VidPlayer = new VidPlayer( options );
     addChild( myVideoPlayer );
@@ -169,3 +169,6 @@ this will clear all 'pause' events added via bind:
 ######EXAMPLE:
     :::javascript
     thisMovie("ID/name of video player swf").unmute();
+    
+
+##Last updated by Mike Spencer 7/16/12
