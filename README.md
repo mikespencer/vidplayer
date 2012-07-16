@@ -1,40 +1,46 @@
 #FLASH:
-
+    
+    :::javascript
     import VidPlayer.VidPlayer;
-    var options = {
-      //these are the default options for the video player. "source" is the ONLY required option here.
-      source : null,
-      width : 320,
-      height : 240,
-      buffer_time : 8,
-      autoplay : true,
-      mute : true,
-      controlsBorderFill : 0xFFFFFF,
-      buttonsBGFill : 0x000000,
-      buttonsFill : 0xFFFFFF,
-      progressFill :  [ 0x6699CC, 0x306496 ],
-      progressBGFill:  [ 0xDDDDDD, 0x666666 ],
-      poster : false,
-      controls_alpha : 0.7,
-      pause_alpha : 0.7,
-      play_alpha : 0.7,
-      x : 0,
-      y : 0,
-      useFlashVars : true,
-      standAlone : false,
-      track_play : false,
-      track_pause : false,
-      track_end : false,
-      preload : true,
-      pauseAt : false,
-      clickTag : false,
-      jsTrackFunction : false,
-      trackingPixel : false,
-      letterBox : false
-    };
+    
+		private var data = {
+			//these are the default options for the video player.
+      //Please note that "source" is the only required property. The rest are optional.
+			width : 320,
+			height : 240,
+			buffer_time : 8,
+			source : null, //required
+			autoplay : true,
+			mute : true,
+			controlsBorderFill : 0xFFFFFF,
+			buttonsBGFill : 0x000000,
+			buttonsFill : 0xFFFFFF,
+			progressFill :  [ 0x6699CC, 0x306496 ],
+			progressBGFill:  [ 0xDDDDDD, 0x666666 ],
+			poster : false,
+			controls_alpha : 0.7,
+			pause_alpha : 0.7,
+			play_alpha : 0.7,
+			x : 0,
+			y : 0,
+			useFlashVars : true,
+			standAlone : false,
+			track_play : false,
+			track_pause : false,
+			track_end : false,
+			preload : false,
+			pauseAt : false,
+			clickTag : false,
+			jsTrackFunction : false,
+			trackingPixel : false,
+			letterBox : false,
+			previewSource: null,
+			fullSource: null
+		};
+    
     var myVideoPlayer:VidPlayer = new VidPlayer( options );
     addChild( myVideoPlayer );
-
+    
 
 
 The options can all also be passed in via FlashVars in the HTML - eg:
@@ -61,7 +67,8 @@ The options can all also be passed in via FlashVars in the HTML - eg:
 #JAVASCRIPT INTERACTION:
 
 function for referencing the video player swf
-
+    
+    :::javascript
     function thisMovie(movieName) {
       if (navigator.appName.indexOf("Microsoft") != -1) {
         return window[movieName];
@@ -73,12 +80,13 @@ function for referencing the video player swf
 
 ##attr:
 ######USAGE: 
-
+    :::javascript
     attr(object with video player options:Object);
 
 ######EXAMPLE:
 this will switch video and poster when called and will start playing the new video:
-
+    
+    :::javascript
     thisMovie("ID/name of video player swf").attr({
       source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
       poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
@@ -90,6 +98,7 @@ this will switch video and poster when called and will start playing the new vid
 ##bind:
 ######USAGE: 
 
+    :::javascript
     bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
     
 can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub", "all"
@@ -98,13 +107,29 @@ can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub", "all"
 
 this will call 'console.log("video has been paused")' when the user pauses the video:
 
+    :::javascript
     thisMovie("ID/name of video player swf").bind('pause','console.log','video has been paused')
 
-
+This will track render a tracking pixel on ANY interaction with the player:
+    
+    
+    :::javascript
+    function vidPlayerAddPixel(src) {
+      var i = document.createElement("img");
+      i.src = src;
+      i.height = "1";
+      i.width = "1";
+      i.style.display = "none";
+      document.body.appendChild(i);
+    }
+    
+   thisMovie("ID/name of video player swf").bind('all','vidPlayerAddPixel','myPixelURL'); 
+   
 
 ##unbind:
 ######USAGE: 
-
+   
+   :::javascript
     unbind(event:String);
     
 the "event" argument is optional. If omitted, all bind events will be cleared.
@@ -113,6 +138,7 @@ the "event" argument is optional. If omitted, all bind events will be cleared.
 
 this will clear all 'pause' events added via bind:
     
+    :::javascript
     thisMovie("ID/name of video player swf").unbind('pause');
 
 
@@ -121,20 +147,25 @@ this will clear all 'pause' events added via bind:
 
 ##play:
 ######EXAMPLE:
+    :::javascript
     thisMovie("ID/name of video player swf").play();
 
 ##pause:
 ######EXAMPLE:
+    :::javascript
     thisMovie("ID/name of video player swf").pause();
 
 ##stop:
 ######EXAMPLE:
+    :::javascript
     thisMovie("ID/name of video player swf").stop();
 
 ##mute:
 ######EXAMPLE:
+    :::javascript
     thisMovie("ID/name of video player swf").mute();
 
 ##unmute:
 ######EXAMPLE:
+    :::javascript
     thisMovie("ID/name of video player swf").unmute();
