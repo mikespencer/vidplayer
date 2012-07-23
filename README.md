@@ -20,6 +20,7 @@
       buttonsBGFill : 0x000000,
       buttonsFill : 0xFFFFFF,
       progressFill :  [ 0x6699CC, 0x306496 ],
+      progressBufferFill:  [ 0xCCCCCC, 0x333333 ],
       progressBGFill:  [ 0xDDDDDD, 0x666666 ],
       poster : false,
       controls_alpha : 0.7,

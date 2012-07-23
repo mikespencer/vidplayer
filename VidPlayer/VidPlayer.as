@@ -48,6 +48,7 @@
 			buttonsBGFill : 0x000000,
 			buttonsFill : 0xFFFFFF,
 			progressFill :  [ 0x6699CC, 0x306496 ],
+			progressBufferFill:  [ 0xCCCCCC, 0x333333 ],
 			progressBGFill:  [ 0xDDDDDD, 0x666666 ],
 			poster : false,
 			controls_alpha : 0.7,
@@ -376,7 +377,7 @@
 		
 		private function create_mcProgressBG(){
 			var fType:String = GradientType.LINEAR;
-			var colours:Array = [ 0xCCCCCC, 0x333333 ];
+			var colours:Array = data.progressBufferFill;
 			var alphas:Array = [ 1, 1 ];
 			var ratios:Array = [ 0, 255 ];
 			var matr:Matrix = new Matrix();
