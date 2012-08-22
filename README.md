@@ -1,6 +1,5 @@
 #FLASH:
     
-    :::javascript
     import VidPlayer.VidPlayer;
     
     var options = {
@@ -73,7 +72,7 @@ The options can all also be passed in via FlashVars in the HTML - eg:
 
 function for referencing the video player swf
     
-    :::javascript
+
     function thisMovie(movieName) {
       if (navigator.appName.indexOf("Microsoft") != -1) {
         return window[movieName];
@@ -85,13 +84,13 @@ function for referencing the video player swf
 
 ##attr:
 ######How to use: 
-    :::javascript
+
     attr(object with video player options:Object);
 
 ######EXAMPLE:
 this will switch video and poster when called and will start playing the new video:
     
-    :::javascript
+
     thisMovie("ID/name of video player swf").attr({
       source : 'http://videoads.washingtonpost.com/Smartwater_Sizzle_15sec_10.20.11.v6_HR.f4v',
       poster : 'http://media.washingtonpost.com/wp-adv/advertisers/smartwater/2011/poster.jpg',
@@ -103,7 +102,7 @@ this will switch video and poster when called and will start playing the new vid
 ##bind:
 ######How to use: 
 
-    :::javascript
+
     bind(event:String, javascript_function:String, param1(optional), param2(optional), param3(optional), param4(optional));
     
 can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub", "all"
@@ -112,13 +111,13 @@ can bind events to: "pause", "play", "stop", "mute", "unmute", "scrub", "all"
 
 this will call 'console.log("video has been paused")' when the user pauses the video:
 
-    :::javascript
+
     thisMovie("ID/name of video player swf").bind('pause','console.log','video has been paused')
 
 This will render a tracking pixel on ANY interaction with the player:
     
     
-    :::javascript
+
     function vidPlayerAddPixel(src) {
       var i = document.createElement("img");
       i.src = src;
@@ -134,7 +133,7 @@ This will render a tracking pixel on ANY interaction with the player:
 ##unbind:
 ######How to use: 
    
-    :::javascript
+
     unbind(event:String);
     
 the "event" argument is optional. If omitted, all bind events will be cleared.
@@ -143,7 +142,7 @@ the "event" argument is optional. If omitted, all bind events will be cleared.
 
 this will clear all 'pause' events added via bind:
     
-    :::javascript
+
     thisMovie("ID/name of video player swf").unbind('pause');
 
 
@@ -152,27 +151,27 @@ this will clear all 'pause' events added via bind:
 
 ##play:
 ######EXAMPLE:
-    :::javascript
+
     thisMovie("ID/name of video player swf").play();
 
 ##pause:
 ######EXAMPLE:
-    :::javascript
+
     thisMovie("ID/name of video player swf").pause();
 
 ##stop:
 ######EXAMPLE:
-    :::javascript
+
     thisMovie("ID/name of video player swf").stop();
 
 ##mute:
 ######EXAMPLE:
-    :::javascript
+
     thisMovie("ID/name of video player swf").mute();
 
 ##unmute:
 ######EXAMPLE:
-    :::javascript
+
     thisMovie("ID/name of video player swf").unmute();
     
 
